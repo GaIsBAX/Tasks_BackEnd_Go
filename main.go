@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	_ "tasks/docs"
 	"tasks/handlers"
 	"tasks/repository"
@@ -17,12 +18,26 @@ import (
 var port = ":8080"
 
 func main() {
-	connStr := "host=localhost port=5433 user=admin password=secret dbname=tasks_db sslmode=disable"
+
+	host := os.Getenv("DB_HOST")
+	portdb := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, portdb, user, password, dbname)
+
+	if host == "" || portdb == "" || user == "" || password == "" || dbname == "" {
+		log.Fatalf("❌ Ошибка: не все переменные окружения установлены! DB_HOST=%s, DB_PORT=%s, DB_USER=%s, DB_NAME=%s", host, port, user, dbname)
+	}
+
+	// connStr := "host=localhost port=5433 user=admin password=secret dbname=tasks_db sslmode=disable"
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Ошибка подключения к БД:", err)
 	}
+
 	defer db.Close()
 
 	taskRepo := &repository.TaskRepository{DB: db}
