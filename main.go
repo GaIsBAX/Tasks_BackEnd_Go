@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	_ "tasks/docs"
-	"tasks/handlers"
-	"tasks/repository"
+	_ "tasks_backend/docs"
+	"tasks_backend/handlers"
+	"tasks_backend/repository"
+	"tasks_backend/utils"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 
@@ -50,7 +51,7 @@ func main() {
 		case http.MethodPost:
 			taskHandler.CreateTask(w, r)
 		default:
-			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+			utils.SendErrorResponse(w, http.StatusMethodNotAllowed, "Метод не поддерживается", "Ошибка с Get или Post запросом")
 		}
 	})
 
@@ -61,7 +62,7 @@ func main() {
 		case http.MethodDelete:
 			taskHandler.DeleteTask(w, r)
 		default:
-			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+			utils.SendErrorResponse(w, http.StatusMethodNotAllowed, "Метод не поддерживается", "Ошибка с Put или Delete запросом")
 		}
 	})
 

@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
+	model "tasks_backend/models"
 )
 
 var validStatuses = map[string]bool{
@@ -24,4 +27,18 @@ func ExtractID(urlPath string) (int, error) {
 		return 0, fmt.Errorf("ID не указан")
 	}
 	return strconv.Atoi(pathParts[2])
+}
+
+func SendErrorResponse(w http.ResponseWriter, statusCode int, errMsg string, details string) {
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	response := model.ErrorResponse{
+		Error:   errMsg,
+		Details: details,
+	}
+
+	json.NewEncoder(w).Encode(response)
+
 }

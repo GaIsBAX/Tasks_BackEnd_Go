@@ -1,4 +1,4 @@
-module tasks
+module tasks_backend
 
 go 1.23.0
 

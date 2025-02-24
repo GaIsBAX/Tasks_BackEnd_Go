@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	model "tasks/models"
+	model "tasks_backend/models"
 )
 
 type TaskRepository struct {
